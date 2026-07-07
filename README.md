@@ -1,7 +1,10 @@
 ## Armored-Core-6-FPS-Unlock
 A small tool to unlock the Framerate of AC6
+
+Fork of https://github.com/Kel-Kay/Armored-Core-6-FPS-Unlock but instead of a 360 fps cap, this caps to 224 fps for 240hz VRR monitors. 
+
 ### What it does
-- Changes the forced 120 fps cap to 360 fps
+- Changes the forced 120 fps cap to 224 fps
 - Removes the forced 120 hz cap
 - Starts the game if it replaces the start_protected_game.exe.
 
