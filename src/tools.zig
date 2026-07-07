@@ -28,7 +28,7 @@ pub fn fileExists(name: [*:0]const u16) bool {
 
 ///caller is responsible for freeing allocated memory
 pub fn getExecutableName(allocator: std.mem.Allocator) ![]const u16 {
-    var buffer = try allocator.alloc(u16, 1024);
+    const buffer = try allocator.alloc(u16, 1024);
     defer allocator.free(buffer);
 
     const len = win.GetModuleFileNameW(null, buffer.ptr, @truncate(buffer.len));

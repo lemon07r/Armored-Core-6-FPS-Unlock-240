@@ -13,9 +13,9 @@ const hz_pattern = [_]?u8{ 0xEB, null, 0xC7, null, null, 0x3C, 0x00, 0x00, 0x00,
 const fps_pattern_offset = 9;
 const hz_pattern_offset_one = 5;
 const hz_pattern_offset_two = 12;
-const hz_jmp_offset = -21;
+const hz_jmp_back_offset = 21;
 
-const new_cap = 360.0;
+const new_cap = 224.0;
 const new_frametime: f32 = 1.0 / new_cap;
 
 pub fn main() !void {
@@ -79,7 +79,7 @@ pub fn main() !void {
 
     success *= win.WriteProcessMemory(proc_handle, @ptrFromInt(@intFromPtr(mod_handle) + hz_pattern_rel + hz_pattern_offset_one), &empty_dword, @sizeOf(u32), null);
     success *= win.WriteProcessMemory(proc_handle, @ptrFromInt(@intFromPtr(mod_handle) + hz_pattern_rel + hz_pattern_offset_two), &empty_dword, @sizeOf(u32), null);
-    success *= win.WriteProcessMemory(proc_handle, @ptrFromInt(@intFromPtr(mod_handle) + hz_pattern_rel + hz_jmp_offset), &jmp_near, @sizeOf(u8), null);
+    success *= win.WriteProcessMemory(proc_handle, @ptrFromInt(@intFromPtr(mod_handle) + hz_pattern_rel - hz_jmp_back_offset), &jmp_near, @sizeOf(u8), null);
 
     return if (success == win.FALSE) error.FailedToWriteProcessMemory;
 }

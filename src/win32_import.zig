@@ -1,4 +1,4 @@
-pub usingnamespace @cImport({
+const c = @cImport({
     @cDefine("WIN32_LEAN_AND_MEAN", "");
     @cInclude("windows.h");
     @cInclude("tlhelp32.h");
@@ -7,3 +7,37 @@ pub usingnamespace @cImport({
 });
 
 pub const L = @import("std").unicode.utf8ToUtf16LeStringLiteral;
+
+pub const CloseHandle = c.CloseHandle;
+pub const CreateProcessW = c.CreateProcessW;
+pub const CreateToolhelp32Snapshot = c.CreateToolhelp32Snapshot;
+pub const EnumProcessModulesEx = c.EnumProcessModulesEx;
+pub const FALSE = c.FALSE;
+pub const FindFirstFileW = c.FindFirstFileW;
+pub const GetCommandLineW = c.GetCommandLineW;
+pub const GetModuleFileNameW = c.GetModuleFileNameW;
+pub const GetStartupInfoW = c.GetStartupInfoW;
+pub const HMODULE = c.HMODULE;
+pub const INVALID_HANDLE_VALUE = c.INVALID_HANDLE_VALUE;
+pub const K32GetModuleBaseNameW = c.K32GetModuleBaseNameW;
+pub const K32GetModuleInformation = c.K32GetModuleInformation;
+pub const LIST_MODULES_64BIT = c.LIST_MODULES_64BIT;
+pub const MEM_COMMIT = c.MEM_COMMIT;
+pub const MEM_RELEASE = c.MEM_RELEASE;
+pub const MEM_RESERVE = c.MEM_RESERVE;
+pub const MODULEINFO = c.MODULEINFO;
+pub const OpenProcess = c.OpenProcess;
+pub const PAGE_READWRITE = c.PAGE_READWRITE;
+pub const PROCESS_INFORMATION = c.PROCESS_INFORMATION;
+pub const PROCESSENTRY32W = c.PROCESSENTRY32W;
+pub const Process32FirstW = c.Process32FirstW;
+pub const Process32NextW = c.Process32NextW;
+pub const ReadProcessMemory = c.ReadProcessMemory;
+pub const STARTUPINFOW = c.STARTUPINFOW;
+pub const Sleep = c.Sleep;
+pub const TH32CS_SNAPPROCESS = c.TH32CS_SNAPPROCESS;
+pub const TRUE = c.TRUE;
+pub const VirtualAlloc = c.VirtualAlloc;
+pub const VirtualFree = c.VirtualFree;
+pub const WIN32_FIND_DATAW = c.WIN32_FIND_DATAW;
+pub const WriteProcessMemory = c.WriteProcessMemory;
