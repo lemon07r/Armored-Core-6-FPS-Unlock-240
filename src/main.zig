@@ -15,7 +15,7 @@ const hz_pattern_offset_one = 5;
 const hz_pattern_offset_two = 12;
 const hz_jmp_offset = -21;
 
-const new_cap = 360.0;
+const new_cap = 224.0;
 const new_frametime: f32 = 1.0 / new_cap;
 
 pub fn main() !void {
