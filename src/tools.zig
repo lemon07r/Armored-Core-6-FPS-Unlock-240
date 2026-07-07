@@ -102,6 +102,45 @@ pub fn findProcess(proc_name: [*:0]const u16) failure!*anyopaque {
     }
 }
 
+pub fn findProcessByModuleMinSize(proc_name: [*:0]const u16, min_module_size: u32) failure!*anyopaque {
+    const snapshot = win.CreateToolhelp32Snapshot(win.TH32CS_SNAPPROCESS, 0);
+    if (snapshot == win.INVALID_HANDLE_VALUE) return failure.FailedToCreateSnapshot;
+    defer _ = win.CloseHandle(snapshot);
+
+    var proc_entry = std.mem.zeroes(win.PROCESSENTRY32W);
+    proc_entry.dwSize = @sizeOf(win.PROCESSENTRY32W);
+
+    if (win.Process32FirstW(snapshot, &proc_entry) == win.TRUE) {
+        var has_proc = true;
+        while (has_proc) {
+            if (stringEql(@ptrCast(&proc_entry.szExeFile), proc_name)) {
+                const proc_handle = win.OpenProcess(0xFFFF, win.FALSE, proc_entry.th32ProcessID);
+                if (proc_handle != std.os.windows.INVALID_HANDLE_VALUE) {
+                    const handle = proc_handle.?;
+                    const mod_handle = findModule(handle, proc_name) catch {
+                        _ = win.CloseHandle(handle);
+                        has_proc = win.Process32NextW(snapshot, &proc_entry) == win.TRUE;
+                        continue;
+                    };
+                    const mod_size = getModuleSize(handle, mod_handle) catch {
+                        _ = win.CloseHandle(handle);
+                        has_proc = win.Process32NextW(snapshot, &proc_entry) == win.TRUE;
+                        continue;
+                    };
+                    if (mod_size >= min_module_size) {
+                        return handle;
+                    }
+                    _ = win.CloseHandle(handle);
+                }
+            }
+
+            has_proc = win.Process32NextW(snapshot, &proc_entry) == win.TRUE;
+        }
+    }
+
+    return failure.FailedToFindProcess;
+}
+
 pub fn findPattern(pattern: []const ?u8, mem_ptr: *anyopaque, mem_len: usize) failure!*anyopaque {
     var i: usize = 0;
     while (i < (mem_len - pattern.len)) : (i += 1) {

@@ -15,6 +15,7 @@ const hz_pattern_offset_one = 5;
 const hz_pattern_offset_two = 12;
 const hz_jmp_back_offset = 21;
 
+const game_module_min_size = 10 * 1024 * 1024;
 const new_cap = 224.0;
 const new_frametime: f32 = 1.0 / new_cap;
 
@@ -51,8 +52,14 @@ pub fn main() !void {
         proc_handle = try tools.findProcess(proc_names[0]);
         mod_name = proc_names[0];
     } else {
-        proc_handle = try tools.findProcess(proc_names[1]);
-        mod_name = proc_names[1];
+        mod_name = proc_names[0];
+        proc_handle = tools.findProcessByModuleMinSize(proc_names[0], game_module_min_size) catch |err| switch (err) {
+            tools.failure.FailedToFindProcess => blk: {
+                mod_name = proc_names[1];
+                break :blk try tools.findProcess(proc_names[1]);
+            },
+            else => return err,
+        };
     }
 
     defer _ = win.CloseHandle(proc_handle);
